@@ -2,6 +2,7 @@ const express =  require('express')
 const app = express()
 const port = 5000
 const { User } = require('./models/User');
+const { auth } = requeire('./middleware/auth')
 const bodyParser = require('body-parser');
 const cookieparser = require('cookie-parser');
 
@@ -24,7 +25,7 @@ mongoose.connect(config.mongoURI, {
 app.get('/', (req,res) => res.send('Hello World!'))
 
 //회원가입을 위한 라우트
-app.post('/register', (req, res) => {
+app.post('/api/users/register', (req, res) => {
     //회원가입 할때 필요한 정보들을 Client에서 가져오면
     //그것들을 DB에 넣어줌.
     const user = new User(req.body);
@@ -38,7 +39,7 @@ app.post('/register', (req, res) => {
     })
 })
 
-app.post('/login', (req, res) => {
+app.post('/api/users//login', (req, res) => {
     //요청된 이메일을 데이터베이스에서 탐색
     User.findOne({ email: req.body.email }, (err, user) => {
         if(!user) {
@@ -62,13 +63,23 @@ app.post('/login', (req, res) => {
                 .status(200)
                 .json({ loginSuccess: true, userId: user._id})
             })
-
         })
-    
+    })
+})
+
+app.get('/api/users/auth', auth, (req, res) => {
+    //여기까지 왔다는 건 미들웨어 통과 = Auth 성공.
+
+    res.status(200).json({
+        _id: req.user._id,
+        isAdmin: req.user.role === 0 ? false : true,
+        isAuth: true, 
+        email: req.user.email,
+        name: req.user.name
     })
 
 
-    
+
 })
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`))

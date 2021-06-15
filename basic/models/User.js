@@ -73,5 +73,19 @@ userSchema.methods.generateToken = function(cb) {
     })
 }
 
+userSchema.methods.findByToken = function(token, cb) {
+    var user = this;
+    //Token decode
+    jwt.verify(token, 'secretToken', function(err, decoded) {
+        // 유저 아이디를 통해 유저 탐색 후 
+        // 클라이언트 토큰과 DB 토큰 비교
+
+        user.findOne({"_id": decoded, "token": token}, function(err, user) {
+            if(err) return cb(err);
+            cb(null, user)
+        })
+    })
+}
+
 const User = mongoose.model('User', userSchema)
 module.exports = { User } // 다른 곳에서도 쓸 수 있도록.
