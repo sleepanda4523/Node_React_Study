@@ -1,4 +1,4 @@
-const { User } = require('./models/User')
+const { User } = require('../models/User')
 
 let auth = (req, res, next) => {
     //인증 처리 코드
@@ -8,7 +8,7 @@ let auth = (req, res, next) => {
 
     // token 복호화 후 User 탐색
     User.findByToken(token, (err, user) => {
-        if(err) throw err;
+        if(err) throw err
         if(!user) return res.json({ isAuth: false, error: true})
 
         req.token = token;
