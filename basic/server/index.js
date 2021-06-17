@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cookieparser = require('cookie-parser')
 
 
-const config = require('./config/key');
+const config = require('config/key');
 
 //application/x-www
 app.use(express.urlencoded({extended:true}));
