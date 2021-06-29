@@ -1,4 +1,4 @@
-const express =  require('express')
+const express = require('express')
 const app = express()
 const port = 5000
 const { User } = require('./models/User')
@@ -7,7 +7,7 @@ const bodyParser = require('body-parser')
 const cookieparser = require('cookie-parser')
 
 
-const config = require('config/key');
+const config = require('./config/key');
 
 //application/x-www
 app.use(express.urlencoded({extended:true}));
@@ -24,6 +24,10 @@ mongoose.connect(config.mongoURI, {
 
 app.get('/', (req,res) => res.send('Hello World!'))
 
+app.get('/api/hello', (req, res) => {
+    res.send(" Hi ~ ")
+})
+
 //회원가입을 위한 라우트
 app.post('/api/users/register', (req, res) => {
     //회원가입 할때 필요한 정보들을 Client에서 가져오면
@@ -39,7 +43,7 @@ app.post('/api/users/register', (req, res) => {
     })
 })
 
-app.post('/api/users//login', (req, res) => {
+app.post('/api/users/login', (req, res) => {
     //요청된 이메일을 데이터베이스에서 탐색
     User.findOne({ email: req.body.email }, (err, user) => {
         if(!user) {
